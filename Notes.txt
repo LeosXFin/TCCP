@@ -1,0 +1,10 @@
+1. Activation Logic (versionbits.*)
+Still need the versionbits.h and versionbits.cpp files. Without them, the node has no mechanism to determine when the TCCP fork becomes active.
+2. Chain Parameters (chainparams.cpp)
+Modify src/chainparams.cpp to define the specific activation parameters for each network (mainnet, testnet, regtest). This involves setting the bit, nStartHeight, nTimeoutHeight, and nTCCPChallengeSize for the TCCP deployment.
+3. Validation Hook (validation.cpp)
+Modify src/validation.cpp to call TCCP::VerifyBlock when the fork is active. This is the critical step that actually turns on enforcement of the new rule.
+4. Mining Logic (miner.cpp)
+A developer must modify src/miner.cpp to call TCCP::ComputeProof and add the commitment to the coinbase transaction. Without this, any miner running this software will produce invalid blocks after activation.
+5. Build System (Makefile.am or similar)
+The new files (tccp.cpp, tccp.h, versionbits.cpp, versionbits.h) must be added to the project's build.
